@@ -1,0 +1,118 @@
+---
+title: "ggplot2 Extension for Fixed-Length Axis"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ggplot2 Extension for Fixed-Length Axis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+This vignette shows the basic usage of the `ggfla` package. 
+The initial idea is to mimic the scanpy-style UMAP plotting, which is tidy and useful in publication. 
+However, the naming of the package content is kept general, as the functionality might not be limited to single-cell RNA-seq (scRNAseq) data visualization.
+
+This package implements what is desired in the most appropriate way--exactly replacing the whole axis line with a fixed-length arrow. Other solutions for scanpy-style axis available at the moment of writing are all workarounds--hide the axis lines and draw arrowed-segment geoms within the plot panel.
+
+First, load the package. By loading `ggfla`, the dependency `ggplot2` is also automatically loaded, so no need to `library()` it separately.
+
+```{r setup}
+library(ggfla)
+```
+
+Then, make a plot with `ggplot2`. For now, it is in the default theme. We use the `mtcars` dataset for demonstration.
+
+```{r}
+ggplot(mtcars, aes(mpg, wt)) +
+    geom_point()
+```
+
+## One-step solution for short-arrow axis
+
+With just simply adding `theme_axis_shortArrow()` to the plot, what people mostly want in a scanpy-style plot is done.
+
+```{r}
+ggplot(mtcars, aes(mpg, wt)) +
+    geom_point() +
+    theme_axis_shortArrow()
+```
+
+## Breakdown
+
+What is actually performing the key role in the package is a new theme element, `element_line_fixlen()`, which is designed for replacing the use of ggplot2's original `element_line()` theme definition. When you need more customization in a `theme()`, you can use `element_line_fixlen()` at the any elements starting with `axis.line*` directly.
+
+```{r}
+ggplot(mtcars, aes(mpg, wt)) +
+    geom_point() +
+    theme(
+        axis.line = element_line_fixlen(
+          length = unit(15, "mm"),
+          arrow = arrow(type = "closed", angle = 20, length = unit(0.1, "in"))
+        )
+    )
+```
+
+However, this ONLY changes the axis lines. So the whole story of forming the tidy scanpy-style theme as above includes much more adjustions as below.
+
+```{r}
+ggplot(mtcars, aes(mpg, wt)) +
+    geom_point() +
+    theme(
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        panel.background = element_blank(),
+        panel.grid = element_blank(),
+        axis.title = element_text(hjust = 0),
+        axis.line = element_line_fixlen(
+          length = unit(15, "mm"),
+          arrow = arrow(type = "closed", angle = 20, length = unit(0.1, "in"))
+        )
+    )
+```
+
+**Overall**, this package provide a shortcut theme function, `theme_axis_shortArrow()`, as well as providing the theming element `element_line_fixlen()`, to allow further customization. This package does not provide anymore wrapper functions for fast and easy plotting because it is intended to have the new element seamlessly fit into any existing ggplot2 plotting scripts.
+
+## Short arrow graphic setting
+
+Please also consult `?element_line_fixlen` from your R console for detailed full documentation. Basically, within the call of `element_line_fixlen()`, you can set the color of the whole arrow, the length of the arrow in realistic unit'ed length and the styles of the arrow. The following example code shows everything with explanation in comments.
+
+```{r}
+ggplot(mtcars, aes(mpg, wt)) +
+    geom_point() +
+    theme(
+        # Everything else for the tidy panel
+        axis.ticks = element_blank(),
+        axis.text = element_blank(),
+        panel.background = element_blank(),
+        panel.grid = element_blank(),
+        axis.title = element_text(hjust = 0),
+        # Now comes to the short arrow setting
+        axis.line.x = element_line_fixlen(  # We can separately set x and y axis
+            colour = "blue",                # Color of the whole arrow
+            length = unit(1, "in"),         # Length of the axis arrow
+            linewidth = 2,                  # Width of the arrow line, in "mm"
+            linetype = 3,                   # Line type of the arrow line, 3 for dotted
+            arrow = FALSE,                  # No arrow head, just a line
+            lineend = "round"               # Line end style, "round", "butt" or "square"
+        ),
+        axis.line.y = element_line_fixlen(
+            colour = "red",
+            length = unit(2, "cm"),
+            linewidth = 0.5,
+            linetype = 1,                   # 1 for solid,
+           arrow = arrow(                   # `arrow()` function wraps the arrow head setting
+                angle = 20,                 # Angle of the arrow head
+                length = unit(0.1, "in"),   # Length of the arrow head, with unit
+                type = "closed"             # "closed" for closed head arrow
+            )
+        )
+    )
+```
+
+Yeah this should look ugly, but hopefully you know what everything is doing in full.

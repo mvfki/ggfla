@@ -1,0 +1,23 @@
+Package: ggfla
+Type: Package
+Title: GGPlot2 Extension for Fixed-length Axis
+Version: 0.1.0
+Authors@R: 
+    person("Yichen", "Wang", role = c("aut", "cre"), email = "wayichen@umich.edu")
+Maintainer: Yichen Wang <wayichen@umich.edu>
+Description: Provide element and theme that allow ggplot2 to generate axis lines
+    or arrows with fixed length.
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.3.2
+Roxygen: list(markdown = TRUE)
+Depends:
+    ggplot2
+Imports:
+    grid,
+    cli
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+License: MIT + file LICENSE
