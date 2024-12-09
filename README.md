@@ -41,7 +41,7 @@ ggplot(mtcars, aes(mpg, wt)) +
     )
 ```
 
-[For more guided usage, please see the package vignette.](https://github.com/mvfki/ggfla/blob/main/doc/ggfla.html)
+[For more guided usage, please see the package vignette.](https://htmlpreview.github.io/?https://github.com/mvfki/ggfla/blob/main/doc/ggfla.html)
 
 ## Installation
 
