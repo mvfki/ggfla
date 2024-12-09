@@ -1,4 +1,4 @@
-# ggfla - GGPlot2 Extension for Fixed-length Axis
+# ggfla - GGPlot2 Extension for Fixed-Length Axis
 
 This package is initially intended for making scanpy-style short-arrow axis in ggplot2. 
 This package implements what is desired in the most appropriate way--exactly 
