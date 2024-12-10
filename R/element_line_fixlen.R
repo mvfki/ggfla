@@ -29,9 +29,9 @@
 element_line_fixlen <- function(colour = NULL, length = NULL, linewidth = NULL, linetype = NULL,
                                lineend = NULL, color = NULL, arrow = NULL,
                                inherit.blank = FALSE) {
-    colour <- color %||% colour %||% "black"
-    arrow <- arrow %||% FALSE
-    length <- length %||% unit(1, "npc")
+    if (!is.null(color)) colour <- color
+    if (is.null(colour)) colour <- "black"
+    if (is.null(arrow)) arrow <- FALSE
 
     structure(
         list(colour = colour, length = length, linewidth = linewidth,
@@ -69,18 +69,27 @@ element_grob.element_line_fixlen <- function(
     } else {
         element$arrow
     }
+    length <- if (is.null(element$length)) {
+        1
+    } else {
+        element$length
+    }
 
-    length <- length %||% element$length %||% unit(1, "npc")
+    # length <- length %||% element$length %||% 1
     if (
         !identical(x[1], x[2]) && identical(y[1], y[2])
     ) {
         # horizontal
-        x[2] <- convertWidth(length, "cm")
+        if (is.unit(length)) {
+            x[2] <- convertWidth(length, "cm")
+        }
     } else if (
         identical(x[1], x[2]) && !identical(y[1], y[2])
     ) {
         # vertical
-        y[2] <- convertHeight(length, "cm")
+        if (is.unit(length)) {
+            y[2] <- convertHeight(length, "cm")
+        }
     } else {
         cli::cli_abort("{.field element_line_fixlen} can only be used for axis.line* for now.")
     }

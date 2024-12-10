@@ -2,6 +2,7 @@ Package: ggfla
 Type: Package
 Title: GGPlot2 Extension for Fixed-Length Axis
 Version: 0.1.0
+Date: 2024-12-10
 Authors@R: 
     person("Yichen", "Wang", role = c("aut", "cre"), email = "wayichen@umich.edu")
 Maintainer: Yichen Wang <wayichen@umich.edu>
@@ -17,6 +18,8 @@ Imports:
     cli
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
 License: MIT + file LICENSE
+Config/testthat/edition: 3
