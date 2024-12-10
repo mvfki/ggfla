@@ -66,12 +66,9 @@ jobs:
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "note")
         shell: Rscript {0}
 
-      - name: Run codecov
+      - name: Run & upload codecov
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         run: |
-          covr::package_coverage(type = "tests")
+          covr::codecov(token = Sys.getenv("CODECOV_TOKEN"))
         shell: Rscript {0}
-
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v5
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
