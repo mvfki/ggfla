@@ -68,7 +68,7 @@ jobs:
 
       - name: Run codecov
         run: |
-          covr::codecov()
+          covr::package_coverage(type = "tests")
         shell: Rscript {0}
 
       - name: Upload coverage reports to Codecov
